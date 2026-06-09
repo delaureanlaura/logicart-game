@@ -22,7 +22,7 @@ import {
   updateBattery, updateWeight, updateHUD, setPhaseUI,
   updateTSPPanel, log, renderPackages, renderInventory,
   renderUpgrades, showModal, setRouteLabel,
-} from '../ui/Hud.js';
+} from '../ui/Game.js';
 
 // ── Upgrade definitions ──────────────────────────────────────────────────────
 const UPGRADES = [
@@ -97,6 +97,7 @@ export class Game {
 
   // ── Internal: begin a new round ─────────────────────────────────────────
   _newRound() {
+    this.phase     = 'warehouse';
     this.avail     = generatePackages(this.day);
     this.inventory.clear();
     this.tspResult = null;
@@ -523,19 +524,49 @@ export class Game {
     ctx.restore();
   }
 
-  // ── Canvas click → toggle package by clicking a node ────────────────────
+  // ── Correção do Clique no Canvas ─────────────────────────────────────────
   handleCanvasClick(mx, my) {
-    if (this.phase !== 'warehouse') return;
+    if (this.phase !== 'warehouse' || !this.nodes) return;
+    
+    let clicked = false;
     this.nodes.forEach((n, id) => {
-      if (id === 0) return;
-      if (Math.hypot(mx - n.x, my - n.y) < 20) {
+      if (id === 0) return; // Não faz nada se clicar no Hub L (Nó 0)
+      
+      // Hitbox aumentada para 30 para facilitar o clique
+      if (Math.hypot(mx - n.x, my - n.y) < 30) {
         const pkg = this.avail.find(x => x.dest === id);
-        if (pkg) this.togglePackage(pkg);
+        if (pkg) {
+          this.togglePackage(pkg);
+          clicked = true;
+        }
       }
     });
+
+    if (!clicked) {
+      console.log(`Clique no vazio. Coordenadas do Canvas: X:${Math.round(mx)}, Y:${Math.round(my)}`);
+    }
   }
 
-  // ── Internal helpers ─────────────────────────────────────────────────────
+  _bindButtons() {
+    // Escuta o clique real do mouse diretamente no canvas do jogo
+    this.canvas.addEventListener('click', (e) => {
+      if (this.phase !== 'warehouse') return;
+
+      // Pega o tamanho e posição exata do canvas na tela do navegador
+      const rect = this.canvas.getBoundingClientRect();
+      
+      // Calcula a proporção caso a janela tenha sido redimensionada pelo CSS
+      const scaleX = this.canvas.width / rect.width;
+      const scaleY = this.canvas.height / rect.height;
+
+      // Converte a posição da tela para a posição interna do canvas
+      const mx = (e.clientX - rect.left) * scaleX;
+      const my = (e.clientY - rect.top) * scaleY;
+
+      // Dispara a função com as coordenadas corrigidas
+      this.handleCanvasClick(mx, my);
+    });
+  }
   _refreshAll() {
     updateHUD(this);
     updateBattery(this.bat, this.maxBat);
@@ -551,8 +582,4 @@ export class Game {
     renderInventory(this.inventory);
   }
 
-  _bindButtons() {
-    // Buttons call back into this Game instance via window.game (set in main.js)
-    // We use data attributes so no inline handlers are needed
-  }
 }
