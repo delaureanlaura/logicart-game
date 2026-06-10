@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOGICART — Menu</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/menu.css">
+</head>
+<body class="page-enter">
+
+  <canvas class="stars-canvas" id="stars-canvas"></canvas>
+
+  <!-- Logo -->
+  <div class="menu-logo">
+    <h1 class="neon-title">LOGICART</h1>
+    <div class="tagline">✦ Episódio I: O Turno da Manhã ✦</div>
+  </div>
+
+  <!-- Save stats bar -->
+  <div class="menu-save-bar" id="save-bar">
+    <div class="save-stat"><div class="sv" id="sv-money">—</div><div class="sl">Créditos</div></div>
+    <div class="save-stat"><div class="sv" id="sv-del">—</div><div class="sl">Entregas</div></div>
+    <div class="save-stat"><div class="sv" id="sv-stars">—</div><div class="sl">Estrelas</div></div>
+  </div>
+
+  <!-- Navigation buttons -->
+  <div class="menu-buttons">
+    <button class="btn btn-primary btn-lg" onclick="window.location.href='map.html'">
+      🗺️ INICIAR CAMPANHA
+    </button>
+    <button class="btn btn-secondary btn-lg" onclick="window.location.href='codex.html'">
+      📖 CODEX / COMO JOGAR
+    </button>
+    <button class="btn btn-gold btn-lg" onclick="window.location.href='intro.html'">
+      🎬 VER INTRO
+    </button>
+    <button class="btn btn-danger btn-sm" onclick="resetGame()" style="margin-top:8px">
+      🗑️ Resetar Progresso
+    </button>
+  </div>
+
+  <div class="menu-footer">
+    KNAPSACK · TSP HELD-KARP · KRUSKAL MST · TIMSORT INVENTORY
+  </div>
+
+<script type="module">
+  import { initStarfield }        from '../src/ui/starfield.js';
+  import { loadState, resetState } from '../src/core/GameState.js';
+  import { MISSIONS }              from '../src/core/MapData.js';
+
+  initStarfield(document.getElementById('stars-canvas'));
+
+  // Load and display save stats
+  const state = loadState();
+  document.getElementById('sv-money').textContent  = '✦' + state.money;
+  document.getElementById('sv-del').textContent    = state.totDel;
+  const totalStars = state.missions.reduce((s, m) => s + (m.starCount || 0), 0);
+  document.getElementById('sv-stars').textContent  = totalStars + ' ⭐';
+
+  // Reset
+  window.resetGame = () => {
+    if (confirm('Resetar todo o progresso? Esta ação não pode ser desfeita.')) {
+      resetState();
+      location.reload();
+    }
+  };
+</script>
+</body>
+</html>
