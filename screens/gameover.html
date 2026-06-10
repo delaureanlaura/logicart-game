@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOGICART — Game Over</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/gameover.css">
+</head>
+<body class="page-enter">
+
+  <div class="go-title">💀 GAME OVER</div>
+
+  <div class="go-msg" id="go-msg">
+    O Gambi ficou sem bateria no meio da rota e caiu.
+    Pacotes não entregues foram perdidos.
+  </div>
+
+  <div class="go-stats">
+    <div class="go-stat"><div class="gsv" id="go-money">—</div><div class="gsl">Créditos</div></div>
+    <div class="go-stat"><div class="gsv" id="go-del">—</div><div class="gsl">Entregas</div></div>
+    <div class="go-stat"><div class="gsv" id="go-day">—</div><div class="gsl">Dia</div></div>
+    <div class="go-stat"><div class="gsv" id="go-bat">—</div><div class="gsl">Bateria restante</div></div>
+  </div>
+
+  <div class="go-reason" id="go-reason"></div>
+
+  <div class="go-actions">
+    <button class="btn btn-primary btn-md" id="btn-retry">
+      🔄 Tentar Novamente
+    </button>
+    <button class="btn btn-secondary btn-md" onclick="window.location.href='map.html'">
+      🗺️ Ver Mapa
+    </button>
+    <button class="btn btn-secondary btn-md" onclick="window.location.href='menu.html'">
+      🏠 Menu
+    </button>
+  </div>
+
+<script type="module">
+  import { loadState, saveState } from '../src/core/GameState.js';
+  import { MISSIONS }             from '../src/core/MapData.js';
+
+  const state = loadState();
+  const idx   = state.currentMission ?? 0;
+
+  document.getElementById('go-money').textContent = '✦' + state.money;
+  document.getElementById('go-del').textContent   = state.totDel;
+  document.getElementById('go-day').textContent   = MISSIONS[idx]?.day ?? '—';
+  document.getElementById('go-bat').textContent   = Math.round(state.roundBatEnd ?? 0) + '%';
+
+  // Custom reason if stored
+  if (state.gameOverMsg) {
+    document.getElementById('go-msg').textContent    = state.gameOverMsg;
+  }
+
+  document.getElementById('go-reason').textContent =
+    '💡 Dica: compre a Bateria de Titânio Rosa ou selecione menos pacotes para reduzir a distância da rota.';
+
+  document.getElementById('btn-retry').onclick = () => {
+    state.roundEarned   = 0;
+    state.roundDels     = 0;
+    state.roundDist     = 0;
+    const m = MISSIONS[idx];
+    state.roundBatStart = Math.round(state.maxBat * (m?.batMult ?? 1));
+    saveState(state);
+    window.location.href = 'game.html';
+  };
+</script>
+</body>
+</html>

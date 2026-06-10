@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOGICART — Resultados</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/results.css">
+</head>
+<body class="page-enter">
+
+  <canvas class="stars-canvas" id="stars-canvas"></canvas>
+
+  <div class="result-stars" id="res-stars"></div>
+  <div class="result-title neon-title" id="res-title"></div>
+
+  <div id="perfect-badge" class="perfect-badge" style="display:none">
+    ✦ MISSÃO PERFEITA ✦
+  </div>
+
+  <div class="result-grid" id="res-grid"></div>
+
+  <div class="result-algo" id="res-algo"></div>
+
+  <div class="result-actions">
+    <button class="btn btn-primary btn-md" id="btn-next" style="display:none">
+      📅 Próxima Missão ➜
+    </button>
+    <button class="btn btn-secondary btn-md" onclick="window.location.href='map.html'">
+      🗺️ Ver Mapa
+    </button>
+    <button class="btn btn-secondary btn-md" onclick="window.location.href='menu.html'">
+      🏠 Menu
+    </button>
+  </div>
+
+<script type="module">
+  import { initStarfield }                    from '../src/ui/starfield.js';
+  import { loadState, saveState, completeMission } from '../src/core/GameState.js';
+  import { MISSIONS }                         from '../src/core/MapData.js';
+
+  initStarfield(document.getElementById('stars-canvas'));
+
+  const state  = loadState();
+  const idx    = state.currentMission ?? 0;
+  const m      = MISSIONS[idx];
+
+  // Calculate max possible value from all available packages
+  // (stored in state by game.html)
+  const maxPossible = state.roundMaxPossible || 1;
+  const ratio       = state.roundEarned / maxPossible;
+  const stars       = ratio >= 0.85 ? 3 : ratio >= 0.55 ? 2 : state.roundEarned > 0 ? 1 : 0;
+  const starStr     = ['', '⭐', '⭐⭐', '⭐⭐⭐'][stars];
+
+  // Update mission stars + unlock next
+  completeMission(state, idx, stars);
+
+  // UI
+  document.getElementById('res-stars').textContent = starStr || '💔';
+  document.getElementById('res-title').textContent =
+    stars === 3 ? 'MISSÃO PERFEITA!' :
+    stars === 2 ? 'BOA MISSÃO!'      :
+    stars === 1 ? 'MISSÃO CONCLUÍDA' : 'MISSÃO INCOMPLETA';
+
+  if (stars === 3) document.getElementById('perfect-badge').style.display = 'block';
+
+  // Stats grid
+  const grid = document.getElementById('res-grid');
+  [
+    { val: '✦' + state.roundEarned, lbl: 'Créditos ganhos' },
+    { val: state.roundDels,         lbl: 'Entregas' },
+    { val: state.roundBatEnd + '%', lbl: 'Bateria restante' },
+    { val: Math.round(state.roundDist) + 'px', lbl: 'Distância voada' },
+  ].forEach(s => {
+    const d = document.createElement('div');
+    d.className = 'result-stat';
+    d.innerHTML = `<div class="rs-val">${s.val}</div><div class="rs-lbl">${s.lbl}</div>`;
+    grid.appendChild(d);
+  });
+
+  // Algo summary
+  document.getElementById('res-algo').innerHTML = `
+    <strong>ALGORITMOS USADOS NESTA MISSÃO:</strong><br>
+    TSP: ${state.tspAlgo || '—'} (${state.tspComp || '—'})<br>
+    2º Problema: Kruskal MST — O(E log E) — desconto de −15% em arestas MST<br>
+    Inventário: TimSort O(n log n) · Knapsack Greedy O(n log n)
+  `;
+
+  // Next mission button
+  const nextIdx = idx + 1;
+  if (nextIdx < MISSIONS.length && state.missions[nextIdx]?.unlocked) {
+    const btn = document.getElementById('btn-next');
+    btn.style.display = 'inline-flex';
+    btn.onclick = () => {
+      state.currentMission = nextIdx;
+      saveState(state);
+      window.location.href = 'briefing.html';
+    };
+  }
+</script>
+</body>
+</html>
