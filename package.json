@@ -1,0 +1,12 @@
+{
+  "name": "logicart-game",
+  "version": "1.0.0",
+  "description": "LOGICART — Episódio I: O Turno da Manhã. Jogo de estratégia com algoritmos clássicos de CS como mecânicas centrais.",
+  "type": "module",
+  "keywords": ["game","tsp","held-karp","knapsack","kruskal","mst","html5","canvas","javascript","computer-science"],
+  "scripts": {
+    "start": "npx serve .",
+    "dev":   "npx http-server . -p 3000 --cors"
+  },
+  "engines": { "node": ">=16" }
+}
