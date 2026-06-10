@@ -1,0 +1,106 @@
+/* ═══════════════════════════════════════════════════
+   css/results.css — Tela de Resultados
+═══════════════════════════════════════════════════ */
+
+body {
+  background: radial-gradient(ellipse at 50% 30%, #1E004A 0%, #07000F 70%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 24px;
+}
+
+/* ── STARS ──────────────────────────────────────── */
+.result-stars {
+  font-size: 2.4rem;
+  letter-spacing: 6px;
+  animation: starsAppear 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes starsAppear {
+  from { opacity: 0; transform: scale(0.5); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── TITLE ──────────────────────────────────────── */
+.result-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
+  letter-spacing: 0.12em;
+}
+
+/* ── STATS GRID ─────────────────────────────────── */
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.result-stat {
+  background: rgba(255, 31, 142, 0.06);
+  border: 1px solid rgba(255, 31, 142, 0.2);
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+  animation: statSlide 0.5s ease forwards;
+  opacity: 0;
+}
+
+.result-stat:nth-child(1) { animation-delay: 0.1s; }
+.result-stat:nth-child(2) { animation-delay: 0.2s; }
+.result-stat:nth-child(3) { animation-delay: 0.3s; }
+.result-stat:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes statSlide {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.rs-val { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: var(--gold); }
+.rs-lbl { font-size: 0.65rem; color: var(--pink-mid); margin-top: 3px; }
+
+/* ── ALGO SUMMARY ───────────────────────────────── */
+.result-algo {
+  background: rgba(0, 245, 255, 0.05);
+  border: 1px solid rgba(0, 245, 255, 0.2);
+  border-radius: 10px;
+  padding: 14px 18px;
+  max-width: 500px;
+  width: 100%;
+  font-size: 0.73rem;
+  line-height: 1.85;
+  color: var(--pink-pale);
+}
+
+.result-algo strong { color: var(--cyan); font-family: var(--font-display); font-size: 0.65rem; }
+
+/* ── ACTIONS ────────────────────────────────────── */
+.result-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ── PERFECT BADGE ──────────────────────────────── */
+.perfect-badge {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  padding: 6px 20px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--pink), var(--gold));
+  color: #fff;
+  box-shadow: 0 0 24px rgba(255, 215, 0, 0.5);
+  animation: badgePulse 1.5s infinite alternate;
+}
+
+@keyframes badgePulse {
+  from { box-shadow: 0 0 12px rgba(255, 215, 0, 0.4); }
+  to   { box-shadow: 0 0 32px rgba(255, 215, 0, 0.9); }
+}
