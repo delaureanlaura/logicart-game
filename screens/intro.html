@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOGICART — Intro</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/intro.css">
+</head>
+<body>
+
+  <!-- Starfield canvas -->
+  <canvas class="stars-canvas" id="stars-canvas"></canvas>
+
+  <!-- "Num futuro não tão distante…" -->
+  <div id="intro-prelude">
+    Num futuro não tão distante,<br>
+    numa cidade que só funciona de segunda a sexta…
+  </div>
+
+  <!-- LOGICART logo zoom -->
+  <div id="intro-logo">
+    <span>LOGICART</span>
+  </div>
+
+  <!-- Perspective crawl -->
+  <div id="crawl-stage">
+    <div id="crawl-body">
+      <div class="crawl-ep">Episódio I</div>
+      <div class="crawl-title">O TURNO<br>DA MANHÃ</div>
+
+      <p class="crawl-p">
+        A cidade acordou e os pedidos não param de chegar.
+        No painel de controle do <em>Hub L</em>, o Operador
+        <strong>Kai</strong> se prepara para mais um dia de trabalho.
+      </p>
+
+      <p class="crawl-p">
+        Aqui não existem vilões ou impérios malignos.
+        O seu único inimigo é a <strong>física</strong>.
+      </p>
+
+      <p class="crawl-p">
+        Pilotando o drone de entregas <em>"Gambi"</em>,
+        sua missão é resolver um quebra-cabeça logístico diário.
+        O espaço no porta-malas é <strong>super limitado</strong>,
+        e a bateria drena rápido a cada quilômetro voado.
+      </p>
+
+      <p class="crawl-p">
+        Escolha as encomendas que dão mais lucro sem estourar
+        o limite de peso. Calcule a <strong>rota mais curta e
+        inteligente</strong> para garantir que o Gambi consiga
+        voltar para a base antes de apagar.
+      </p>
+
+      <p class="crawl-p crawl-wednesday">
+        ✦ Mas atenção ao calendário ✦<br>
+        Quando chega a <strong>quarta-feira</strong>, a regra muda.<br>
+        Pacotes cor-de-rosa, incrivelmente valiosos e absurdamente
+        pesados, entram na fila para testar de vez a sua lógica.
+      </p>
+
+      <p class="crawl-p">
+        Os motores estão ligados.<br>
+        O mapa está carregado.
+      </p>
+
+      <div class="crawl-sign">Boa decolagem, Operador. 🛸</div>
+
+      <!-- Padding so last line fully scrolls into view -->
+      <div style="height: 45vh;"></div>
+    </div>
+  </div>
+
+  <!-- PLAY button (appears after crawl ends) -->
+  <button id="intro-play-btn" onclick="window.location.href='menu.html'">
+    ▶ JOGAR AGORA
+  </button>
+
+  <!-- Skip hint -->
+  <div id="skip-btn" onclick="skipIntro()">[ PULAR INTRO ]</div>
+
+<script type="module">
+  import { initStarfield } from '../src/ui/starfield.js';
+
+  const sf = initStarfield(document.getElementById('stars-canvas'));
+
+  // ── Timings ─────────────────────────────────────
+  const T_LOGO_START  = 4.2;   // seconds after page load
+  const T_LOGO_END    = 7.0;
+  const T_CRAWL_START = 7.2;
+  const CRAWL_DUR     = 36;    // seconds for full crawl
+  const T_BTN         = T_CRAWL_START + CRAWL_DUR - 4;
+
+  // ── Logo animation ───────────────────────────────
+  const logoEl = document.getElementById('intro-logo');
+
+  function runLogo() {
+    logoEl.style.cssText = 'opacity:0;transform:scale(1);display:flex';
+    setTimeout(() => {
+      logoEl.style.transition = 'opacity .5s';
+      logoEl.style.opacity    = '1';
+    }, 50);
+    // Zoom away
+    setTimeout(() => {
+      logoEl.style.transition = 'transform 1.4s ease-in, opacity 1.2s ease-in';
+      logoEl.style.transform  = 'scale(12)';
+      logoEl.style.opacity    = '0';
+    }, (T_LOGO_END - T_LOGO_START - 0.6) * 1000);
+  }
+
+  // ── Crawl animation ──────────────────────────────
+  const crawlStage = document.getElementById('crawl-stage');
+  const crawlBody  = document.getElementById('crawl-body');
+
+  function runCrawl() {
+    crawlStage.style.opacity = '1';
+    const startY = window.innerHeight;
+    const endY   = -(crawlBody.scrollHeight + 100);
+    crawlBody.style.transform = `translateX(-50%) rotateX(26deg) translateY(${startY}px)`;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      crawlBody.style.transition = `transform ${CRAWL_DUR}s linear`;
+      crawlBody.style.transform  = `translateX(-50%) rotateX(26deg) translateY(${endY}px)`;
+    }));
+  }
+
+  // ── Button reveal ─────────────────────────────────
+  const playBtn = document.getElementById('intro-play-btn');
+  function showBtn() { playBtn.classList.add('visible'); }
+
+  // ── Schedule sequence ─────────────────────────────
+  const timers = [
+    setTimeout(runLogo,  T_LOGO_START  * 1000),
+    setTimeout(runCrawl, T_CRAWL_START * 1000),
+    setTimeout(showBtn,  T_BTN         * 1000),
+  ];
+
+  // ── Skip ──────────────────────────────────────────
+  window.skipIntro = () => {
+    timers.forEach(clearTimeout);
+    document.getElementById('intro-prelude').style.display = 'none';
+    logoEl.style.display     = 'none';
+    crawlStage.style.display = 'none';
+    showBtn();
+  };
+</script>
+</body>
+</html>
