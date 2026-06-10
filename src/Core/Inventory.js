@@ -1,127 +1,78 @@
 /**
- * Inventory.js — Inventory Abstract Data Type
+ * tspExact.js — Held-Karp (TSP Exato via Programação Dinâmica + Bitmask)
  *
- * Stores items collected by the player. Provides:
- *   - add(item)       → O(1)
- *   - remove(id)      → O(n)
- *   - has(id)         → O(n)
- *   - clear()         → O(1)
- *   - getDestinations() → O(n), returns unique destination node IDs
- *   - sortBy(key)     → O(n log n) — Quicksort via Array.sort (2nd algorithm integration)
+ * Resolve o Travelling Salesman Problem de forma EXATA.
+ * Complexidade: O(2^n × n²) tempo | O(2^n × n) espaço
+ * Adequado para n ≤ 15; o jogo usa no máximo n = 8 destinos.
  *
- * The sortBy method integrates a second CS problem: in-place comparison sorting,
- * allowing players to organize packages by weight, value, or density.
+ * Estado: dp[mask][i] = custo mínimo de visitar o subconjunto
+ * codificado por `mask`, terminando no nó i.
  */
-export class Inventory {
-  constructor(maxWeight) {
-    /** @type {Array} Stored items */
-    this._items = [];
-    /** @type {number} */
-    this._maxWeight = maxWeight;
-    /** @type {number} Running sum of item weights */
-    this._currentWeight = 0;
+export function tspExact(startId, visitIds, nodes) {
+  const n = visitIds.length;
+
+  if (n === 0) return { route: [startId, startId], dist: 0, algo: 'N/A', comp: 'O(1)' };
+
+  if (n === 1) {
+    const d = euclidean(nodes[startId], nodes[visitIds[0]])
+            + euclidean(nodes[visitIds[0]], nodes[startId]);
+    return { route: [startId, visitIds[0], startId], dist: d, algo: 'Held-Karp DP', comp: 'O(2¹×1²)' };
   }
 
-  // ── Getters ──────────────────────────────────────────────────────────────
+  // Matriz de distâncias — índice 0 = hub, 1..n = visitIds
+  const all = [startId, ...visitIds];
+  const N   = all.length;
+  const D   = Array.from({ length: N }, (_, i) =>
+    Array.from({ length: N }, (_, j) => euclidean(nodes[all[i]], nodes[all[j]]))
+  );
 
-  get items()         { return [...this._items]; }          // defensive copy
-  get currentWeight() { return this._currentWeight; }
-  get maxWeight()     { return this._maxWeight; }
-  set maxWeight(v)    { this._maxWeight = v; }
-  get count()         { return this._items.length; }
-  get isEmpty()       { return this._items.length === 0; }
-  get isFull()        { return this._currentWeight >= this._maxWeight - 1e-9; }
+  const INF  = Infinity;
+  const FULL = (1 << n) - 1;
+  const dp   = Array.from({ length: 1 << n }, () => new Float64Array(n).fill(INF));
+  const par  = Array.from({ length: 1 << n }, () => new Int8Array(n).fill(-1));
 
-  // ── Core Operations ──────────────────────────────────────────────────────
+  // Base: hub → cada nó individual
+  for (let i = 0; i < n; i++) dp[1 << i][i] = D[0][i + 1];
 
-  /**
-   * Add an item. Returns false if it exceeds capacity.
-   * @param {{ id, name, wgt, val, dest, emoji }} item
-   * @returns {boolean} success
-   */
-  add(item) {
-    if (this._currentWeight + item.wgt > this._maxWeight + 1e-9) return false;
-    this._items.push({ ...item });   // store a copy
-    this._currentWeight = +(this._currentWeight + item.wgt).toFixed(2);
-    return true;
+  // Preenchimento de todos os subconjuntos
+  for (let mask = 1; mask <= FULL; mask++) {
+    for (let last = 0; last < n; last++) {
+      if (!(mask & (1 << last)) || dp[mask][last] === INF) continue;
+      for (let next = 0; next < n; next++) {
+        if (mask & (1 << next)) continue;
+        const nm   = mask | (1 << next);
+        const cost = dp[mask][last] + D[last + 1][next + 1];
+        if (cost < dp[nm][next]) { dp[nm][next] = cost; par[nm][next] = last; }
+      }
+    }
   }
 
-  /**
-   * Remove item by id. Returns the removed item or null.
-   * @param {number} id
-   * @returns {object|null}
-   */
-  remove(id) {
-    const idx = this._items.findIndex(x => x.id === id);
-    if (idx === -1) return null;
-    const [removed] = this._items.splice(idx, 1);
-    this._currentWeight = +(this._currentWeight - removed.wgt).toFixed(2);
-    if (this._currentWeight < 0) this._currentWeight = 0; // float-safety
-    return removed;
+  // Melhor retorno ao hub
+  let best = INF, bestL = 0;
+  for (let i = 0; i < n; i++) {
+    const t = dp[FULL][i] + D[i + 1][0];
+    if (t < best) { best = t; bestL = i; }
   }
 
-  /**
-   * Check if an item with the given id exists.
-   * @param {number} id
-   * @returns {boolean}
-   */
-  has(id) {
-    return this._items.some(x => x.id === id);
+  // Reconstrução do caminho
+  const path = [];
+  let mask = FULL, cur = bestL;
+  while (cur !== -1) {
+    path.unshift(visitIds[cur]);
+    const prev = par[mask][cur];
+    mask ^= (1 << cur);
+    cur = prev;
   }
 
-  /** Remove all items. */
-  clear() {
-    this._items = [];
-    this._currentWeight = 0;
-  }
+  return {
+    route: [startId, ...path, startId],
+    dist:  best,
+    algo:  'Held-Karp DP',
+    comp:  `O(2^${n}×${n}²)`,
+  };
+}
 
-  /**
-   * Returns unique destination node IDs of items in the inventory.
-   * @returns {number[]}
-   */
-  getDestinations() {
-    return [...new Set(this._items.map(x => x.dest))];
-  }
-
-  /**
-   * Returns items that belong to a given destination node.
-   * @param {number} destId
-   * @returns {Array}
-   */
-  getItemsForDest(destId) {
-    return this._items.filter(x => x.dest === destId);
-  }
-
-  // ── Second Algorithm: Comparison Sorting ────────────────────────────────
-  /**
-   * Sort inventory items in-place by a given key.
-   * Uses JS engine's native sort (TimSort / QuickSort hybrid — O(n log n)).
-   * Exposed as a UI feature ("Organizar inventário").
-   *
-   * @param {'val'|'wgt'|'density'|'dest'} key - Sort criterion
-   * @param {'asc'|'desc'} order
-   */
-  sortBy(key = 'val', order = 'desc') {
-    const dir = order === 'desc' ? -1 : 1;
-    this._items.sort((a, b) => {
-      let va, vb;
-      if (key === 'density') { va = a.val / a.wgt; vb = b.val / b.wgt; }
-      else                   { va = a[key];         vb = b[key]; }
-      return dir * (va - vb);
-    });
-  }
-
-  /**
-   * Check if an item WOULD fit (does not add it).
-   * @param {number} wgt
-   * @returns {boolean}
-   */
-  wouldFit(wgt) {
-    return this._currentWeight + wgt <= this._maxWeight + 1e-9;
-  }
-
-  /** @returns {number} Remaining weight capacity */
-  get remaining() {
-    return +(this._maxWeight - this._currentWeight).toFixed(2);
-  }
+function euclidean(a, b) {
+  const dx = a.x - b.x, dy = a.y - b.y;
+  return Math.sqrt(dx * dx + dy * dy);
 }
