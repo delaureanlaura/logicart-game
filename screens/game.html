@@ -141,16 +141,16 @@ import { tspExact }       from '../src/algorithms/tspExact.js';
 import { tspHeuristic }   from '../src/algorithms/tspHeuristic.js';
 import { greedyKnapsack } from '../src/algorithms/knapsack.js';
 import { kruskalMST, buildEdgesFromNodes } from '../src/algorithms/kruskal.js';
-import { Inventory }      from '../src/core/Inventory.js';
-import { Renderer }       from '../src/core/Renderer.js';
+import { Inventory }      from '../src/Core/Inventory.js';
+import { Renderer }       from '../src/Core/Renderer.js';
 import {
   loadState, saveState,
-} from '../src/core/GameState.js';
+} from '../src/Core/GameState.js';
 import {
   RAW_NODES, EDGE_LIST, DAYS_OF_WEEK, WEDNESDAY_CYCLE,
   TSP_THRESHOLD, BATTERY_SCALE, MST_DISCOUNT,
   computeNodes, generatePackages, MISSIONS,
-} from '../src/core/MapData.js';
+} from '../src/Core/MapData.js';
 import {
   updateHUD, updateBattery, updateWeight, setPhaseUI,
   updateTSPPanel, updateMSTPanel, setRouteLabel,

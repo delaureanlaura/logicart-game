@@ -15,7 +15,7 @@
   <!-- "Num futuro não tão distante…" -->
   <div id="intro-prelude">
     Num futuro não tão distante,<br>
-    numa cidade que só funciona de segunda a sexta…
+    numa cidade caótica de qualquer país, um novo tipo de trabalho domina as ruas: <br> o de Operador de Drones de Entrega.<br>
   </div>
 
   <!-- LOGICART logo zoom -->
@@ -74,12 +74,20 @@
   </div>
 
   <!-- PLAY button (appears after crawl ends) -->
-  <button id="intro-play-btn" onclick="window.location.href='menu.html'">
+  <button id="intro-play-btn" onclick="goToMenu()">
     ▶ JOGAR AGORA
   </button>
 
   <!-- Skip hint -->
   <div id="skip-btn" onclick="skipIntro()">[ PULAR INTRO ]</div>
+
+  <!-- Mute button -->
+  <button id="mute-btn" onclick="toggleMute()" title="Mutar / Desmutar música">🔊</button>
+
+  <!-- Intro music -->
+  <audio id="intro-music" loop preload="auto">
+    <source src="../assets/IntroStarWars.mp3" type="audio/mpeg">
+  </audio>
 
 <script type="module">
   import { initStarfield } from '../src/ui/starfield.js';
@@ -92,6 +100,55 @@
   const T_CRAWL_START = 7.2;
   const CRAWL_DUR     = 36;    // seconds for full crawl
   const T_BTN         = T_CRAWL_START + CRAWL_DUR - 4;
+
+  // ── Audio ─────────────────────────────────────────
+  const music   = document.getElementById('intro-music');
+  const muteBtn = document.getElementById('mute-btn');
+  music.volume  = 0;
+
+  function fadeInAudio(duration = 2500) {
+    const steps     = 50;
+    const interval  = duration / steps;
+    const increment = 1 / steps;
+    const timer = setInterval(() => {
+      if (music.volume < 1 - increment) {
+        music.volume = Math.min(1, music.volume + increment);
+      } else {
+        music.volume = 1;
+        clearInterval(timer);
+      }
+    }, interval);
+  }
+
+  function startMusic() {
+    music.play().then(() => fadeInAudio()).catch(() => {});
+  }
+
+  // Tenta autoplay; se bloqueado pelo navegador, aguarda primeira interação
+  const autoplayPromise = music.play();
+  if (autoplayPromise !== undefined) {
+    autoplayPromise
+      .then(() => fadeInAudio())
+      .catch(() => {
+        const onInteract = () => {
+          startMusic();
+          document.removeEventListener('click',   onInteract);
+          document.removeEventListener('keydown', onInteract);
+        };
+        document.addEventListener('click',   onInteract);
+        document.addEventListener('keydown', onInteract);
+      });
+  }
+
+  window.toggleMute = () => {
+    music.muted     = !music.muted;
+    muteBtn.textContent = music.muted ? '🔇' : '🔊';
+  };
+
+  function stopMusic() {
+    music.pause();
+    music.currentTime = 0;
+  }
 
   // ── Logo animation ───────────────────────────────
   const logoEl = document.getElementById('intro-logo');
@@ -135,6 +192,12 @@
     setTimeout(runCrawl, T_CRAWL_START * 1000),
     setTimeout(showBtn,  T_BTN         * 1000),
   ];
+
+  // ── Navigate to menu (para a música antes) ────────
+  window.goToMenu = () => {
+    stopMusic();
+    window.location.href = 'menu.html';
+  };
 
   // ── Skip ──────────────────────────────────────────
   window.skipIntro = () => {

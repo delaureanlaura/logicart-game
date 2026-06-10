@@ -199,3 +199,23 @@ body {
   transition: color 0.2s;
 }
 #skip-btn:hover { color: rgba(255, 179, 217, 0.85); }
+
+/* ── MUTE BUTTON ────────────────────────────────── */
+#mute-btn {
+  position: absolute;
+  bottom: 2.5vh;
+  left: 2.5vw;
+  z-index: 20;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity 0.2s, transform 0.15s;
+  line-height: 1;
+  padding: 4px;
+}
+#mute-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.2);
+}

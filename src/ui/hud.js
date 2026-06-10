@@ -2,7 +2,7 @@
  * hud.js — Funções de atualização do HUD e painéis laterais
  * Todas as funções recebem dados e atualizam apenas o DOM.
  */
-import { DAYS_OF_WEEK, WEDNESDAY_CYCLE } from '../core/MapData.js';
+import { DAYS_OF_WEEK, WEDNESDAY_CYCLE } from '../Core/MapData.js';
 
 // ── HUD superior ──────────────────────────────────────────────────────────────
 export function updateHUD({ money, totDel, score, day, bat, maxBat }) {
