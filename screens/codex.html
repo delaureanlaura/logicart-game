@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOGICART — Codex</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/codex.css">
+</head>
+<body class="page-enter">
+
+  <div class="codex-header">
+    <h2 class="neon-title">CODEX DO OPERADOR</h2>
+    <div class="sub">Tudo que você precisa saber antes de decolar</div>
+  </div>
+
+  <div class="codex-grid">
+
+    <div class="codex-card">
+      <h3>🏭 FASE DO GALPÃO — Knapsack</h3>
+      <p>
+        No Hub L, você carrega o Gambi com pacotes. Cada pacote tem
+        <strong style="color:#fff">peso</strong> e
+        <strong style="color:#fff">valor de gorjeta</strong>.
+        O drone tem capacidade limitada — escolha com sabedoria ou
+        clique em <em style="color:#FF9EDA">Otimizar Carga</em> para
+        o algoritmo selecionar automaticamente a melhor combinação.
+      </p>
+      <span class="algo-badge">GREEDY KNAPSACK — O(n log n)</span>
+    </div>
+
+    <div class="codex-card">
+      <h3>🛸 FASE DE VOO — TSP Held-Karp</h3>
+      <p>
+        Após confirmar a carga, o sistema calcula a
+        <strong style="color:#fff">rota mais curta</strong>
+        que visita todos os destinos e retorna ao Hub.
+        O Gambi voa automaticamente pela rota ótima traçada em neon
+        no mapa. O painel técnico exibe o algoritmo, complexidade
+        e distância total.
+      </p>
+      <span class="algo-badge">TSP HELD-KARP — O(2^n × n²)</span>
+    </div>
+
+    <div class="codex-card">
+      <h3>🕸️ REDE DE ENERGIA — Kruskal MST</h3>
+      <p>
+        Antes de cada missão o sistema calcula a
+        <strong style="color:#fff">Árvore Geradora Mínima</strong>
+        do mapa usando o algoritmo de Kruskal. As arestas da MST são
+        exibidas em roxo no mapa. Rotas que passam por essas arestas
+        custam <em style="color:#FF9EDA">−15% de bateria</em> —
+        recompensando quem planeja bem.
+      </p>
+      <span class="algo-badge">KRUSKAL MST — O(E log E)</span>
+    </div>
+
+    <div class="codex-card">
+      <h3>🔋 SISTEMA DE BATERIA</h3>
+      <p>
+        A bateria consome proporcional à
+        <strong style="color:#fff">distância total da rota</strong>,
+        normalizada pela diagonal do canvas para ser sempre uma
+        porcentagem coerente. Se o Gambi ficar sem energia antes de
+        voltar ao Hub, é Game Over e os pacotes pendentes são perdidos.
+        Invista em upgrades de bateria!
+      </p>
+      <span class="algo-badge">NORMALIZAÇÃO POR DIAGONAL</span>
+    </div>
+
+    <div class="codex-card">
+      <h3>📦 INVENTÁRIO INTELIGENTE — TimSort</h3>
+      <p>
+        O inventário suporta <strong style="color:#fff">adicionar,
+        remover e consultar</strong> itens em tempo real.
+        Use os botões 💰 ⚖️ 📈 no painel para ordenar os pacotes
+        por valor, peso ou densidade — usando a ordenação nativa
+        do JS engine (TimSort) em O(n log n).
+      </p>
+      <span class="algo-badge">TIMSORT — O(n log n)</span>
+    </div>
+
+    <div class="codex-card">
+      <h3>🌸 QUARTA-FEIRA ROSA</h3>
+      <p>
+        A cada ciclo de 7 dias, o
+        <strong style="color:#fff">Dia 3 (Quarta)</strong>
+        é especial. Pacotes especiais aparecem com
+        <em style="color:#FF9EDA">valor ×2</em> e
+        <em style="color:#FF9EDA">peso ×1.9</em>.
+        O algoritmo da mochila precisa trabalhar no limite para
+        maximizar o lucro sem travar o drone.
+      </p>
+      <span class="algo-badge">REGRA DE EVENTO ESPECIAL</span>
+    </div>
+
+    <div class="codex-card">
+      <h3>💅 BURN BOOK UPGRADES</h3>
+      <p>
+        Com créditos acumulados compre melhorias permanentes:
+        <strong style="color:#fff">🔋 Bateria de Titânio Rosa</strong>
+        (+30 pts máx.),
+        <strong style="color:#fff">🧳 Porta-Malas Estendido</strong>
+        (+5 kg) e
+        <strong style="color:#fff">🚀 Propulsor Turbo Fúcsia</strong>
+        (×1.4 velocidade). Cada upgrade tem 3 níveis.
+      </p>
+      <span class="algo-badge">SISTEMA DE PROGRESSÃO</span>
+    </div>
+
+    <div class="codex-card">
+      <h3>⭐ SISTEMA DE ESTRELAS</h3>
+      <p>
+        Cada missão dá <strong style="color:#fff">1 a 3 estrelas</strong>
+        baseado na proporção de créditos ganhos em relação ao máximo
+        possível. ≥85% → 3 estrelas, ≥55% → 2 estrelas, >0 → 1 estrela.
+        Complete missões para desbloquear a próxima. Tente sempre
+        melhorar seu recorde!
+      </p>
+      <span class="algo-badge">SCORE RATIO-BASED</span>
+    </div>
+
+  </div>
+
+  <div class="codex-back">
+    <button class="btn btn-secondary btn-md" onclick="history.back()">
+      ← VOLTAR
+    </button>
+  </div>
+
+</body>
+</html>

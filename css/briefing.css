@@ -1,0 +1,171 @@
+/* ═══════════════════════════════════════════════════
+   css/briefing.css — Tela de Briefing de Missão
+═══════════════════════════════════════════════════ */
+
+body {
+  background: radial-gradient(ellipse at 50% 40%, #150035 0%, #07000F 70%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* ── HEADER ─────────────────────────────────────── */
+.brief-header {
+  text-align: center;
+}
+
+.brief-header .ep-label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  color: var(--pink);
+  letter-spacing: 0.3em;
+  margin-bottom: 6px;
+}
+
+.brief-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 24px rgba(255, 215, 0, 0.5);
+}
+
+.brief-header .day-badge {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  color: var(--cyan);
+  margin-top: 6px;
+  letter-spacing: 0.15em;
+}
+
+/* ── PANELS ROW ─────────────────────────────────── */
+.brief-panels {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 960px;
+  width: 100%;
+}
+
+.brief-panel {
+  background: rgba(255, 31, 142, 0.04);
+  border: 1px solid rgba(255, 31, 142, 0.22);
+  border-radius: 14px;
+  padding: 18px;
+  flex: 1;
+  min-width: 220px;
+  max-width: 290px;
+}
+
+.brief-panel h3 {
+  font-family: var(--font-display);
+  font-size: 0.64rem;
+  color: var(--cyan);
+  letter-spacing: 0.18em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+/* stat row */
+.brief-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.75rem;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255, 31, 142, 0.1);
+}
+
+.brief-stat:last-child { border-bottom: none; }
+
+.brief-stat .bs-val {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  color: var(--gold);
+}
+
+/* objectives list */
+.brief-objectives {
+  list-style: none;
+  padding: 0;
+}
+
+.brief-objectives li {
+  font-size: 0.75rem;
+  line-height: 1.85;
+  color: var(--pink-pale);
+  padding-left: 1.2em;
+  position: relative;
+}
+
+.brief-objectives li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--pink);
+}
+
+/* conditions block */
+.brief-conditions {
+  font-family: var(--font-story);
+  font-size: 0.75rem;
+  line-height: 1.85;
+  color: var(--pink-pale);
+}
+
+.brief-conditions .cond-item {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(255, 31, 142, 0.05);
+  border-left: 2px solid var(--pink);
+}
+
+.brief-conditions .cond-item.warn {
+  border-left-color: var(--gold);
+  background: rgba(255, 215, 0, 0.05);
+  color: var(--gold);
+}
+
+.brief-conditions .cond-item.special {
+  border-left-color: var(--purple);
+  background: rgba(191, 95, 255, 0.07);
+  color: #FF9EDA;
+}
+
+/* ── ACTIONS ────────────────────────────────────── */
+.brief-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ── WEDNESDAY BANNER ───────────────────────────── */
+.wednesday-banner {
+  background: linear-gradient(90deg, var(--pink), var(--gold), var(--pink));
+  background-size: 200% 100%;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  padding: 8px 24px;
+  border-radius: 20px;
+  text-align: center;
+  animation: wednesdayShift 2s linear infinite;
+  box-shadow: 0 0 24px rgba(255, 31, 142, 0.6);
+}
+
+@keyframes wednesdayShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

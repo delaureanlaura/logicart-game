@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOGICART — Briefing</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/briefing.css">
+</head>
+<body class="page-enter">
+
+  <!-- Header -->
+  <div class="brief-header">
+    <div class="ep-label" id="ep-label">MISSÃO 1 / 7</div>
+    <h2 id="brief-title">—</h2>
+    <div class="day-badge" id="brief-daybadge">—</div>
+  </div>
+
+  <!-- Wednesday banner (shown only on wednesday missions) -->
+  <div class="wednesday-banner" id="wed-banner" style="display:none">
+    🌸 QUARTA-FEIRA ROSA — Pacotes valem ×2 mas pesam ×1.9 🌸
+  </div>
+
+  <!-- Info panels -->
+  <div class="brief-panels">
+
+    <div class="brief-panel">
+      <h3>📊 PARÂMETROS</h3>
+      <div class="brief-stat"><span>Missão</span><span class="bs-val" id="bp-num">—</span></div>
+      <div class="brief-stat"><span>Dia</span><span class="bs-val" id="bp-day">—</span></div>
+      <div class="brief-stat"><span>Pacotes disponíveis</span><span class="bs-val" id="bp-pkgs">—</span></div>
+      <div class="brief-stat"><span>Capacidade do drone</span><span class="bs-val" id="bp-cap">—</span></div>
+      <div class="brief-stat"><span>Bateria inicial</span><span class="bs-val" id="bp-bat">—</span></div>
+      <div class="brief-stat"><span>Algoritmo de rota</span><span class="bs-val">Held-Karp</span></div>
+      <div class="brief-stat"><span>2º Algoritmo</span><span class="bs-val">Kruskal MST</span></div>
+    </div>
+
+    <div class="brief-panel">
+      <h3>🎯 OBJETIVOS</h3>
+      <ul class="brief-objectives">
+        <li>Carregar o Gambi sem exceder o peso máximo</li>
+        <li>Usar o Knapsack para maximizar o valor da carga</li>
+        <li>Calcular a rota mínima com TSP Held-Karp</li>
+        <li>Entregar todos os pacotes e voltar ao Hub L</li>
+        <li>Retornar com bateria suficiente (evitar Game Over)</li>
+        <li>Maximizar créditos para conquistar ⭐⭐⭐</li>
+      </ul>
+    </div>
+
+    <div class="brief-panel">
+      <h3>🔋 CONDIÇÕES ESPECIAIS</h3>
+      <div class="brief-conditions" id="brief-conds"></div>
+    </div>
+
+  </div>
+
+  <!-- Actions -->
+  <div class="brief-actions">
+    <button class="btn btn-primary btn-lg" onclick="startMission()">
+      🚀 INICIAR MISSÃO
+    </button>
+    <button class="btn btn-secondary btn-md" onclick="window.location.href='map.html'">
+      ← VOLTAR AO MAPA
+    </button>
+  </div>
+
+<script type="module">
+  import { loadState, saveState }    from '../src/core/GameState.js';
+  import { MISSIONS, DAYS_OF_WEEK }  from '../src/core/MapData.js';
+
+  const state = loadState();
+  const idx   = state.currentMission ?? 0;
+  const m     = MISSIONS[idx];
+  const day   = m.day;
+  const dayName = DAYS_OF_WEEK[(day - 1) % 7];
+  const [cMin, cMax] = m.pkgRange;
+
+  // Fill header
+  document.getElementById('ep-label').textContent      = `MISSÃO ${idx + 1} / ${MISSIONS.length}`;
+  document.getElementById('brief-title').textContent   = m.name;
+  document.getElementById('brief-daybadge').textContent = `Dia ${day} — ${dayName}`;
+
+  // Fill params
+  document.getElementById('bp-num').textContent  = `${idx + 1} / ${MISSIONS.length}`;
+  document.getElementById('bp-day').textContent  = `${day} — ${dayName}`;
+  document.getElementById('bp-pkgs').textContent = `${cMin}–${cMax} pacotes`;
+  document.getElementById('bp-cap').textContent  = `${state.maxWgt} kg`;
+  document.getElementById('bp-bat').textContent  = `${Math.round(100 * m.batMult)}%`;
+
+  // Wednesday banner
+  if (m.wednesday) {
+    document.getElementById('wed-banner').style.display = 'block';
+  }
+
+  // Conditions
+  const conds = document.getElementById('brief-conds');
+  const items = [
+    { cls: 'special', text: '🕸️ Rotas via arestas da MST (Kruskal) custam −15% de bateria' },
+  ];
+  if (m.wednesday)     items.push({ cls: 'warn',    text: '🌸 Quarta Rosa: peso ×1.9 e valor ×2 em todos os pacotes' });
+  if (m.batMult < 0.9) items.push({ cls: 'warn',    text: `⚡ Bateria inicial reduzida: ${Math.round(m.batMult * 100)}%` });
+  if (state.upgLv.bat > 0)   items.push({ cls: '',  text: `🔋 Bateria de Titânio Rosa Nv${state.upgLv.bat} ativo` });
+  if (state.upgLv.trunk > 0) items.push({ cls: '',  text: `🧳 Porta-Malas Estendido Nv${state.upgLv.trunk} ativo` });
+
+  items.forEach(it => {
+    const d = document.createElement('div');
+    d.className = 'cond-item ' + it.cls;
+    d.textContent = it.text;
+    conds.appendChild(d);
+  });
+
+  // Start mission — store initial bat in state
+  window.startMission = () => {
+    state.roundEarned   = 0;
+    state.roundDels     = 0;
+    state.roundDist     = 0;
+    state.roundBatStart = Math.round(state.maxBat * m.batMult);
+    state.tspAlgo = '—';
+    state.tspComp = '—';
+    saveState(state);
+    window.location.href = 'game.html';
+  };
+</script>
+</body>
+</html>
