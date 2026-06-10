@@ -1,0 +1,201 @@
+/* ═══════════════════════════════════════════════════
+   css/intro.css — Tela de Intro (Star Wars Crawl)
+═══════════════════════════════════════════════════ */
+
+body {
+  background: #000;
+  overflow: hidden;
+}
+
+/* ── PRELUDE TEXT ───────────────────────────────── */
+#intro-prelude {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-story);
+  font-style: italic;
+  font-size: clamp(0.9rem, 2vw, 1.35rem);
+  color: rgba(170, 160, 255, 0.85);
+  letter-spacing: 0.12em;
+  text-align: center;
+  line-height: 1.9;
+  opacity: 0;
+  animation: preludeFade 4s ease forwards;
+}
+
+@keyframes preludeFade {
+  0%   { opacity: 0; }
+  20%  { opacity: 1; }
+  75%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ── LOGICART LOGO ZOOM ─────────────────────────── */
+#intro-logo {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#intro-logo span {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.8rem, 8vw, 6.5rem);
+  letter-spacing: 0.28em;
+  background: linear-gradient(135deg, #FF1F8E, #FFD700, #BF5FFF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 28px rgba(255, 31, 142, 0.9));
+}
+
+/* ── CRAWL STAGE ────────────────────────────────── */
+#crawl-stage {
+  position: absolute;
+  inset: 0;
+  perspective: 400px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s;
+}
+
+/* gradient mask — text fades at top (vanishing point) */
+#crawl-stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    #000 0%,
+    transparent 18%,
+    transparent 70%,
+    #000 100%
+  );
+  pointer-events: none;
+}
+
+#crawl-body {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: min(620px, 88vw);
+  transform-origin: bottom center;
+  transform: translateX(-50%) rotateX(26deg);
+  padding-bottom: 10vh;
+  z-index: 1;
+}
+
+.crawl-ep {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(0.8rem, 1.8vw, 1.05rem);
+  color: var(--pink);
+  letter-spacing: 0.35em;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.crawl-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.5rem, 4vw, 2.6rem);
+  color: var(--gold);
+  text-align: center;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  margin-bottom: 32px;
+  text-shadow: 0 0 36px rgba(255, 215, 0, 0.6);
+}
+
+.crawl-p {
+  font-family: var(--font-story);
+  font-size: clamp(0.8rem, 1.7vw, 1.05rem);
+  color: var(--gold);
+  line-height: 1.9;
+  text-align: justify;
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.crawl-p em     { color: #FF9EDA; font-style: normal; font-weight: 700; }
+.crawl-p strong { color: #fff; font-weight: 700; }
+
+.crawl-p.crawl-wednesday {
+  color: #FF9EDA;
+  text-align: center;
+  font-style: italic;
+}
+
+.crawl-sign {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(0.95rem, 2vw, 1.2rem);
+  color: var(--gold);
+  text-align: center;
+  letter-spacing: 0.18em;
+  margin-top: 24px;
+}
+
+/* ── PLAY BUTTON ────────────────────────────────── */
+#intro-play-btn {
+  position: absolute;
+  bottom: 8vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  padding: 18px 66px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  background: linear-gradient(135deg, var(--pink), var(--fuchsia));
+  color: #fff;
+  border: 2px solid var(--gold);
+  border-radius: 40px;
+  cursor: pointer;
+  box-shadow: 0 0 32px rgba(255, 31, 142, 0.8), inset 0 0 16px rgba(255, 215, 0, 0.2);
+  transition: box-shadow 0.15s;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#intro-play-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+  animation: playAppear 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes playAppear {
+  from { opacity: 0; bottom: 4vh; }
+  to   { opacity: 1; bottom: 8vh; }
+}
+
+#intro-play-btn:hover {
+  transform: translateX(-50%) scale(1.07);
+  box-shadow: 0 0 56px rgba(255, 31, 142, 1), inset 0 0 28px rgba(255, 215, 0, 0.35);
+}
+
+/* ── SKIP HINT ──────────────────────────────────── */
+#skip-btn {
+  position: absolute;
+  bottom: 2.5vh;
+  right: 2.5vw;
+  z-index: 20;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: rgba(255, 179, 217, 0.35);
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  transition: color 0.2s;
+}
+#skip-btn:hover { color: rgba(255, 179, 217, 0.85); }

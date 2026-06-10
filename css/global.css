@@ -1,0 +1,302 @@
+/* ═══════════════════════════════════════════════════
+   css/global.css — Design System LOGICART
+   Importado por todas as páginas via <link>
+═══════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Exo+2:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
+
+/* ── TOKENS ─────────────────────────────────────── */
+:root {
+  --pink:        #FF1F8E;
+  --pink-mid:    #FF6EB4;
+  --pink-pale:   #FFB3D9;
+  --fuchsia:     #C2185B;
+  --purple:      #BF5FFF;
+  --purple-deep: #6A0080;
+  --gold:        #FFD700;
+  --cyan:        #00F5FF;
+  --green:       #7EFFA0;
+  --red:         #FF6B6B;
+  --bg:          #07000F;
+  --bg2:         #0D0018;
+  --card:        rgba(20, 0, 40, 0.96);
+  --border:      rgba(255, 31, 142, 0.4);
+  --shadow:      rgba(255, 31, 142, 0.2);
+
+  --font-display: 'Orbitron', sans-serif;
+  --font-body:    'Rajdhani', sans-serif;
+  --font-story:   'Exo 2', sans-serif;
+}
+
+/* ── RESET ──────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  color: var(--pink-pale);
+  font-family: var(--font-body);
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ── NEON TITLE ─────────────────────────────────── */
+.neon-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  background: linear-gradient(135deg, #FF1F8E 0%, #FFD700 40%, #BF5FFF 70%, #FF6EB4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 18px rgba(255, 31, 142, 0.8));
+  animation: neonPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes neonPulse {
+  from { filter: drop-shadow(0 0 8px rgba(255, 31, 142, 0.5)); }
+  to   { filter: drop-shadow(0 0 32px rgba(255, 31, 142, 1))
+                 drop-shadow(0 0 60px rgba(191, 95, 255, 0.5)); }
+}
+
+/* ── BUTTONS ────────────────────────────────────── */
+.btn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  border: none;
+  cursor: pointer;
+  border-radius: 30px;
+  transition: transform 0.18s, box-shadow 0.18s;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* sizes */
+.btn-lg { padding: 14px 48px; font-size: 0.95rem; }
+.btn-md { padding: 10px 28px; font-size: 0.78rem; }
+.btn-sm { padding: 7px 18px;  font-size: 0.70rem; }
+.btn-xs { padding: 4px 12px;  font-size: 0.60rem; border-radius: 16px; }
+
+/* variants */
+.btn-primary {
+  background: linear-gradient(135deg, var(--pink), var(--fuchsia));
+  color: #fff;
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 20px rgba(255, 31, 142, 0.5);
+}
+.btn-primary:hover:not(:disabled) {
+  transform: scale(1.06);
+  box-shadow: 0 0 36px rgba(255, 31, 142, 0.9);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, var(--purple-deep), var(--purple));
+  color: #fff;
+  border: 2px solid var(--purple);
+  box-shadow: 0 0 14px rgba(191, 95, 255, 0.4);
+}
+.btn-secondary:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 0 28px rgba(191, 95, 255, 0.8);
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, #8B6000, var(--gold));
+  color: #110008;
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 14px rgba(255, 215, 0, 0.4);
+}
+.btn-gold:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 0 28px rgba(255, 215, 0, 0.8);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #8B0000, #FF4444);
+  color: #fff;
+  border: 2px solid var(--red);
+  box-shadow: 0 0 12px rgba(255, 107, 107, 0.4);
+}
+.btn-danger:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 0 24px rgba(255, 107, 107, 0.8);
+}
+
+/* ── PANELS / CARDS ─────────────────────────────── */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--pink);
+  text-transform: uppercase;
+  padding-bottom: 7px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 31, 142, 0.25);
+}
+
+/* ── PROGRESS BARS ──────────────────────────────── */
+.bar-track {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 31, 142, 0.3);
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.35s ease;
+}
+
+.bar-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: #fff;
+  mix-blend-mode: difference;
+}
+
+.bar-battery { background: linear-gradient(90deg, #FF1F8E, #FFD700); box-shadow: 0 0 8px rgba(255, 31, 142, 0.5); }
+.bar-weight  { background: linear-gradient(90deg, #BF5FFF, #00F5FF); }
+.bar-xp      { background: linear-gradient(90deg, #00F5FF, #7EFFA0); }
+.bar-danger  { background: linear-gradient(90deg, #FF4444, #FF8800); }
+
+/* ── MODAL ──────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+
+.modal-box {
+  background: linear-gradient(160deg, #1A002E, #07000F);
+  border: 2px solid var(--pink);
+  border-radius: 20px;
+  padding: 32px 36px;
+  max-width: 480px;
+  width: 92vw;
+  box-shadow: 0 0 80px rgba(255, 31, 142, 0.5);
+  text-align: center;
+}
+
+.modal-box h2 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin-bottom: 12px;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+.modal-box p {
+  color: var(--pink-pale);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.modal-btns {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ── BADGE ──────────────────────────────────────── */
+.algo-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  background: rgba(0, 245, 255, 0.1);
+  color: var(--cyan);
+  border: 1px solid rgba(0, 245, 255, 0.3);
+  margin-top: 8px;
+}
+
+/* ── SCROLLBAR ──────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+::-webkit-scrollbar-thumb { background: var(--pink); border-radius: 3px; }
+
+/* ── UTILITY ────────────────────────────────────── */
+.empty-note {
+  font-size: 0.64rem;
+  color: rgba(255, 179, 217, 0.35);
+  text-align: center;
+  padding: 8px 0;
+}
+
+.text-gold   { color: var(--gold); }
+.text-cyan   { color: var(--cyan); }
+.text-pink   { color: var(--pink); }
+.text-green  { color: var(--green); }
+.text-red    { color: var(--red); }
+.text-center { text-align: center; }
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── STARFIELD CANVAS (shared by multiple screens) ── */
+.stars-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── NAVIGATE TRANSITION ─────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-enter {
+  animation: fadeIn 0.35s ease forwards;
+}
